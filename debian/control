@@ -24,7 +24,7 @@ Homepage: https://github.com/pop/shop
 Package: pop-shop
 Architecture: any
 Priority: extra
-Depends: appstream, packagekit, ${misc:Depends}, ${shlibs:Depends}
+Depends: appstream, packagekit, repoman, ${misc:Depends}, ${shlibs:Depends}
 Recommends: appstream-data-pop
 Description: Fast application store
  Install, update and remove apps with ease.
