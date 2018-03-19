@@ -20,6 +20,7 @@ You'll need the following dependencies:
 * libunity-dev
 * libxml2-dev
 * libxml2-utils
+* [repoman](https://github.com/pop-os/repoman)
 * valac (>= 0.26)
 
 It's recommended to create a clean build environment
