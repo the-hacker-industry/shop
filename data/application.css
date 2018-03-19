@@ -41,7 +41,6 @@
 
 .badge {
     background-color: #d46c13;
-    background-image: none;
     border: none;
     border-radius: 50%;
     box-shadow:
@@ -52,7 +51,6 @@
     margin: 2px;
     min-width: 18px;
     min-height: 18px;
-    text-shadow: none;
 }
 
 .titlebar {
