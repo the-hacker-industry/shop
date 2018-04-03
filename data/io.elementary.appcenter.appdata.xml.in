@@ -154,7 +154,7 @@
     </provides>
     <screenshots>
         <screenshot type="default">
-            <image>https://raw.githubusercontent.com/system76/pop-shop/master/data/screenshot.png</image>
+            <image>https://raw.githubusercontent.com/pop-os/shop/master_bionic/data/screenshot.png</image>
         </screenshot>
     </screenshots>
     <content_rating type="oars-1.1">
@@ -187,8 +187,8 @@
         <content_attribute id="money-gambling">none</content_attribute>
     </content_rating>
     <developer_name>System76</developer_name>
-    <url type="homepage">https://github.com/system76/pop-shop</url>
-    <url type="bugtracker">https://github.com/system76/pop-shop/issues</url>
+    <url type="homepage">https://github.com/pop-os/shop</url>
+    <url type="bugtracker">https://github.com/pop-os/shop/issues</url>
     <url type="help">https://elementaryos.stackexchange.com/questions/tagged/appcenter</url>
     <url type="translate">https://l10n.elementary.io/projects/desktop/appcenter</url>
     <update_contact>info_at_system76.com</update_contact>
