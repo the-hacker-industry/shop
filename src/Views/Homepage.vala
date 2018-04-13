@@ -25,6 +25,9 @@ const int NUM_PACKAGES_IN_CAROUSEL = 15;
 
 namespace AppCenter {
     public class Homepage : View {
+        private const int HOMEPAGE_MARGIN = 12;
+        private const int LABEL_MARGIN = 10;
+
         private Gtk.FlowBox category_flow;
         private Gtk.ScrolledWindow category_scrolled;
         private string current_category;
@@ -82,13 +85,13 @@ namespace AppCenter {
             var featured_label = new Gtk.Label (_("Pop!_Picks"));
             featured_label.get_style_context ().add_class ("h4");
             featured_label.xalign = 0;
-            featured_label.margin_start = 10;
+            featured_label.margin_start = LABEL_MARGIN;
 
             var featured_carousel = new Widgets.Carousel ();
 
             var featured_grid = new Gtk.Grid ();
-            featured_grid.margin = 2;
-            featured_grid.margin_top = 12;
+            featured_grid.margin = HOMEPAGE_MARGIN;
+            featured_grid.margin_bottom = 0;
             featured_grid.attach (featured_label, 0, 0, 1, 1);
             featured_grid.attach (featured_carousel, 0, 1, 1, 1);
 
@@ -98,11 +101,12 @@ namespace AppCenter {
             var categories_label = new Gtk.Label (_("Categories"));
             categories_label.get_style_context ().add_class ("h4");
             categories_label.xalign = 0;
-            categories_label.margin_start = 12;
-            categories_label.margin_top = 24;
+            categories_label.margin_start = HOMEPAGE_MARGIN + LABEL_MARGIN;
+            categories_label.margin_top = HOMEPAGE_MARGIN;
 
             category_flow = new Widgets.CategoryFlowBox ();
-            category_flow.margin = 12;
+            category_flow.margin = HOMEPAGE_MARGIN;
+            category_flow.margin_top = 0;
             category_flow.valign = Gtk.Align.START;
 
             var grid = new Gtk.Grid ();
