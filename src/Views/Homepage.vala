@@ -25,6 +25,7 @@ const int NUM_PACKAGES_IN_CAROUSEL = 15;
 
 namespace AppCenter {
     public class Homepage : View {
+        // Keep things lined up whether certain revealers are shown or not
         private const int HOMEPAGE_MARGIN = 12;
         private const int LABEL_MARGIN = 10;
 
