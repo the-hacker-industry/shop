@@ -21,11 +21,14 @@
 
 using AppCenterCore;
 
-const int NUM_PACKAGES_IN_BANNER = 5;
-const int NUM_PACKAGES_IN_CAROUSEL = 5;
+const int NUM_PACKAGES_IN_CAROUSEL = 15;
 
 namespace AppCenter {
     public class Homepage : View {
+        // Keep things lined up whether certain revealers are shown or not
+        private const int HOMEPAGE_MARGIN = 12;
+        private const int LABEL_MARGIN = 10;
+
         private Gtk.FlowBox category_flow;
         private Gtk.ScrolledWindow category_scrolled;
         private string current_category;
@@ -34,7 +37,6 @@ namespace AppCenter {
 
         public AppStream.Category currently_viewed_category;
         public MainWindow main_window { get; construct; }
-        public Widgets.Banner newest_banner;
         public Gtk.Revealer switcher_revealer;
 
         public Homepage (MainWindow main_window) {
@@ -81,110 +83,49 @@ namespace AppCenter {
             pop_banner.get_style_context ().add_class ("pop-banner");
             pop_banner.attach (pop_banner_copy_area, 0, 0, 1, 1);
 
-            var recently_updated_label = new Gtk.Label (_("Recently Updated"));
-            recently_updated_label.get_style_context ().add_class ("h4");
-            recently_updated_label.xalign = 0;
-            recently_updated_label.margin_start = 10;
+            var featured_label = new Gtk.Label (_("Pop!_Picks"));
+            featured_label.get_style_context ().add_class ("h4");
+            featured_label.xalign = 0;
+            featured_label.margin_start = LABEL_MARGIN;
 
-            var recently_updated_carousel = new Widgets.Carousel ();
+            var featured_carousel = new Widgets.Carousel ();
 
-            var recently_updated_grid = new Gtk.Grid ();
-            recently_updated_grid.margin = 2;
-            recently_updated_grid.margin_top = 12;
-            recently_updated_grid.attach (recently_updated_label, 0, 0, 1, 1);
-            recently_updated_grid.attach (recently_updated_carousel, 0, 1, 1, 1);
+            var featured_grid = new Gtk.Grid ();
+            featured_grid.margin = HOMEPAGE_MARGIN;
+            featured_grid.margin_bottom = 0;
+            featured_grid.attach (featured_label, 0, 0, 1, 1);
+            featured_grid.attach (featured_carousel, 0, 1, 1, 1);
 
-            var recently_updated_revealer = new Gtk.Revealer ();
-            recently_updated_revealer.add (recently_updated_grid );
+            var featured_revealer = new Gtk.Revealer ();
+            featured_revealer.add (featured_grid );
 
-            var trending_label = new Gtk.Label (_("Trending"));
-            trending_label.get_style_context ().add_class ("h4");
-            trending_label.xalign = 0;
-            trending_label.margin_start = 10;
-
-            var trending_carousel = new Widgets.Carousel ();
-
-            var trending_grid = new Gtk.Grid ();
-            trending_grid.margin = 2;
-            trending_grid.margin_top = 12;
-            trending_grid.attach (trending_label, 0, 0, 1, 1);
-            trending_grid.attach (trending_carousel, 0, 1, 1, 1);
-
-            var trending_revealer = new Gtk.Revealer ();
-            trending_revealer.add (trending_grid );
-
-            // var categories_label = new Gtk.Label (_("Categories"));
-            // categories_label.get_style_context ().add_class ("h4");
-            // categories_label.xalign = 0;
-            // categories_label.margin_start = 12;
-            // categories_label.margin_top = 24;
+            var categories_label = new Gtk.Label (_("Categories"));
+            categories_label.get_style_context ().add_class ("h4");
+            categories_label.xalign = 0;
+            categories_label.margin_start = HOMEPAGE_MARGIN + LABEL_MARGIN;
+            categories_label.margin_top = HOMEPAGE_MARGIN;
 
             category_flow = new Widgets.CategoryFlowBox ();
-            category_flow.margin = 12;
+            category_flow.margin = HOMEPAGE_MARGIN;
+            category_flow.margin_top = 0;
             category_flow.valign = Gtk.Align.START;
 
-            // NOTE: The Categories label is not being attached for now, since
-            // we don't utilize the Trending or Recently Updated sections in 
-            // Pop! However, we expect to bring them back in the form of
-            // Pop!_Picks or something, so I haven't removed the code just yet.
-
             var grid = new Gtk.Grid ();
-            grid.attach (pop_banner, 0, 0, 1, 1);
-            grid.attach (trending_revealer, 0, 2, 1, 1);
-            grid.attach (recently_updated_revealer, 0, 3, 1, 1);
-            // grid.attach (categories_label, 0, 4, 1, 1);
-            grid.attach (category_flow, 0, 5, 1, 1);
+            grid.attach (pop_banner,        0, 0, 1, 1);
+            grid.attach (featured_revealer, 0, 1, 1, 1);
+            grid.attach (categories_label,  0, 2, 1, 1);
+            grid.attach (category_flow,     0, 3, 1, 1);
 
             category_scrolled = new Gtk.ScrolledWindow (null, null);
             category_scrolled.add (grid);
 
             add (category_scrolled);
 
-            var local_package = App.local_package;
-            if (local_package != null) {
-                newest_banner.add_package (local_package);
-            }
-
             houston.get_app_ids.begin ("/newest/project", (obj, res) => {
-                var newest_ids = houston.get_app_ids.end (res);
-                new Thread<void*> ("update-banner", () => {
-                    var packages_for_banner = new Gee.LinkedList<AppCenterCore.Package> ();
-                    foreach (var package in newest_ids) {
-                        if (packages_for_banner.size >= NUM_PACKAGES_IN_BANNER) {
-                            break;
-                        }
-
-                        var candidate = package + ".desktop";
-                        var candidate_package = AppCenterCore.Client.get_default ().get_package_for_component_id (candidate);
-
-                        if (candidate_package != null) {
-                            candidate_package.update_state ();
-
-                            if (candidate_package.state == AppCenterCore.Package.State.NOT_INSTALLED) {
-                                packages_for_banner.add (candidate_package);
-                            }
-                        }
-                    }
-
-                    Idle.add (() => {
-                        foreach (var banner_package in packages_for_banner) {
-                            newest_banner.add_package (banner_package);
-                        }
-                        newest_banner.go_to_first ();
-                        switcher.show_all ();
-                        switcher_revealer.set_reveal_child (true);
-                        main_window.homepage_loaded ();
-                        return false;
-                    });
-                    return null;
-                });
-            });
-
-            houston.get_app_ids.begin ("/newest/release", (obj, res) => {
-                var updated_ids = houston.get_app_ids.end (res);
-                new Thread<void*> ("update-recent-carousel", () => {
+                var featured_ids = houston.get_app_ids.end (res);
+                new Thread<void*> ("update-featured-carousel", () => {
                     var packages_for_carousel = new Gee.LinkedList<AppCenterCore.Package> ();
-                    foreach (var package in updated_ids) {
+                    foreach (var package in featured_ids) {
                         if (packages_for_carousel.size >= NUM_PACKAGES_IN_CAROUSEL) {
                             break;
                         }
@@ -202,43 +143,10 @@ namespace AppCenter {
 
                     if (!packages_for_carousel.is_empty) {
                         Idle.add (() => {
-                            foreach (var banner_package in packages_for_carousel) {
-                                recently_updated_carousel.add_package (banner_package);
+                            foreach (var featured_package in packages_for_carousel) {
+                                featured_carousel.add_package (featured_package);
                             }
-                            recently_updated_revealer.reveal_child = true;
-                            return false;
-                        });
-                    }
-                    return null;
-                });
-            });
-
-            houston.get_app_ids.begin ("/newest/downloads", (obj, res) => {
-                var trending_ids = houston.get_app_ids.end (res);
-                new Thread<void*> ("update-trending-carousel", () => {
-                    var packages_for_carousel = new Gee.LinkedList<AppCenterCore.Package> ();
-                    foreach (var package in trending_ids) {
-                        if (packages_for_carousel.size >= NUM_PACKAGES_IN_CAROUSEL) {
-                            break;
-                        }
-
-                        var candidate = package + ".desktop";
-                        var candidate_package = AppCenterCore.Client.get_default ().get_package_for_component_id (candidate);
-
-                        if (candidate_package != null) {
-                            candidate_package.update_state ();
-                            if (candidate_package.state == AppCenterCore.Package.State.NOT_INSTALLED) {
-                                packages_for_carousel.add (candidate_package);
-                            }
-                        }
-                    }
-
-                    if (!packages_for_carousel.is_empty) {
-                        Idle.add (() => {
-                            foreach (var trending_package in packages_for_carousel) {
-                                trending_carousel.add_package (trending_package);
-                            }
-                            trending_revealer.reveal_child = true;
+                            featured_revealer.reveal_child = true;
                             return false;
                         });
                     }
@@ -264,8 +172,7 @@ namespace AppCenter {
                 return 0;
             });
 
-            recently_updated_carousel.package_activated.connect (show_package);
-            trending_carousel.package_activated.connect (show_package);
+            featured_carousel.package_activated.connect (show_package);
         }
 
         public override void show_package (AppCenterCore.Package package) {

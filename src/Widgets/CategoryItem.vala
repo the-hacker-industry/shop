@@ -57,7 +57,7 @@ public class AppCenter.Widgets.CategoryItem : Gtk.FlowBoxChild {
         themed_grid.get_style_context ().add_class ("category");
         themed_grid.attach (grid, 0, 0, 1, 1);
         themed_grid.attach (expanded_grid, 0, 0, 1, 1);
-        themed_grid.margin = 12;
+        themed_grid.margin = 6;
 
         child = themed_grid;
 
