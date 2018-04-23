@@ -55,6 +55,13 @@ public class AppCenter.MainWindow : Gtk.ApplicationWindow {
     public MainWindow (Gtk.Application app) {
         Object (application: app);
 
+        unowned AppCenterCore.Client client = AppCenterCore.Client.get_default ();
+        client.notify["task-count"].connect (() => {
+            working = client.task_count > 0;
+        });
+
+        client.update_cache(true);
+
         weak Gtk.IconTheme default_theme = Gtk.IconTheme.get_default ();
         default_theme.add_resource_path ("/io/elementary/appcenter/icons");
 
@@ -127,11 +134,6 @@ public class AppCenter.MainWindow : Gtk.ApplicationWindow {
             } catch (Error e) {
                 warning (e.message);
             }
-        });
-
-        unowned AppCenterCore.Client client = AppCenterCore.Client.get_default ();
-        client.notify["task-count"].connect (() => {
-            working = client.task_count > 0;
         });
 
         show.connect (on_view_mode_changed);
