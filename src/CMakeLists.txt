@@ -13,6 +13,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
     SuspendControl.vala
     Dialogs/RestartDialog.vala
     Dialogs/StripeDialog.vala
+    Dialogs/LicenseDialog.vala
     Dialogs/UpdateFailDialog.vala
     Views/AppInfoView.vala
     Views/AppListView.vala

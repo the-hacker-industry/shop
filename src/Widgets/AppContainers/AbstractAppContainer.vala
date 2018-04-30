@@ -106,7 +106,18 @@ namespace AppCenter {
             image = new Gtk.Image ();
 
             action_button = new Widgets.HumbleButton ();
-            action_button.download_requested.connect (() => action_clicked.begin ());
+
+            // action_button.license_requested.connect (() => {
+            action_button.download_requested.connect (() => {
+                var license_dialog = new Widgets.LicenseDialog (this.package_name.label, "https://example.com");
+                license_dialog.transient_for = (Gtk.Window) get_toplevel ();
+                
+                license_dialog.download_requested.connect (() => {
+                    action_clicked.begin ();
+                });
+            });
+
+            // action_button.download_requested.connect (() => action_clicked.begin ());
 
             action_button.payment_requested.connect ((amount) => {
                 var stripe = new Widgets.StripeDialog (amount, this.package_name.label, this.package.component.get_desktop_id ().replace (".desktop", ""), this.package.get_payments_key());
