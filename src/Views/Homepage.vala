@@ -38,8 +38,9 @@ namespace AppCenter {
         public AppStream.Category currently_viewed_category;
         public MainWindow main_window { get; construct; }
         public Gtk.Revealer switcher_revealer;
+        private Gtk.Revealer featured_revealer;
         public Widgets.Carousel featured_carousel;
-        private AppCenterCore.Package[] packages_for_carousel;
+        private AppCenterCore.Package[] featured_apps;
 
         public Homepage (MainWindow main_window) {
             Object (main_window: main_window);
@@ -98,7 +99,7 @@ namespace AppCenter {
             featured_grid.attach (featured_label, 0, 0, 1, 1);
             featured_grid.attach (featured_carousel, 0, 1, 1, 1);
 
-            var featured_revealer = new Gtk.Revealer ();
+            featured_revealer = new Gtk.Revealer ();
             featured_revealer.add (featured_grid );
 
             var categories_label = new Gtk.Label (_("Categories"));
@@ -127,7 +128,7 @@ namespace AppCenter {
                 var featured_ids = houston.get_app_ids.end (res);
                 Utils.shuffle_array (featured_ids);
                 new Thread<void*> ("update-featured-carousel", () => {
-                    packages_for_carousel = {};
+                    featured_apps = {};
                     foreach (var package in featured_ids) {
                         var candidate = package + ".desktop";
                         var candidate_package = AppCenterCore.Client.get_default ().get_package_for_component_id (candidate);
@@ -135,21 +136,12 @@ namespace AppCenter {
                         if (candidate_package != null) {
                             candidate_package.update_state ();
                             if (candidate_package.state == AppCenterCore.Package.State.NOT_INSTALLED) {
-                                packages_for_carousel += candidate_package;
+                                featured_apps += candidate_package;
                             }
                         }
                     }
 
-                    if (packages_for_carousel.length != 0) {
-                        Idle.add (() => {
-                            stderr.printf ("found %d featured packages\n", packages_for_carousel.length);
-                            for (int i = 0; i < NUM_PACKAGES_IN_CAROUSEL && i < packages_for_carousel.length; i++) {
-                                featured_carousel.add_package (packages_for_carousel[i]);
-                            }
-                            featured_revealer.reveal_child = true;
-                            return false;
-                        });
-                    }
+                    shuffle_featured_apps ();
                     return null;
                 });
             });
@@ -176,7 +168,18 @@ namespace AppCenter {
         }
 
         public void shuffle_featured_apps () {
-            featured_carousel.shuffle_packages (packages_for_carousel, NUM_PACKAGES_IN_CAROUSEL);
+            featured_carousel.get_children ().foreach ((c) => c.destroy ());
+            Utils.shuffle_array (featured_apps);
+
+            if (featured_apps.length != 0) {
+                Idle.add (() => {
+                    for (int i = 0; i < NUM_PACKAGES_IN_CAROUSEL && i < featured_apps.length; i++) {
+                        featured_carousel.add_package (featured_apps[i]);
+                    }
+                    featured_revealer.reveal_child = true;
+                    return false;
+                });
+            }
         }
 
         public override void show_package (AppCenterCore.Package package) {

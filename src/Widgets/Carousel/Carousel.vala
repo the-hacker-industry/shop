@@ -39,20 +39,6 @@ public class AppCenter.Widgets.Carousel : Gtk.FlowBox {
         show_all ();
     }
 
-    public void shuffle_packages(AppCenterCore.Package[] packages, int32 max) {
-        get_children ().foreach ((c) => c.destroy ());
-        Utils.shuffle_array (packages);
-
-        if (packages.length != 0) {
-            Idle.add (() => {
-                for (int i = 0; i < max && i < packages.length; i++) {
-                    add_package (packages[i]);
-                }
-                return false;
-            });
-        }
-    }
-
     private void on_child_activated (Gtk.FlowBoxChild child) {
         if (child is Widgets.CarouselItem) {
             var package = ((Widgets.CarouselItem)child).package;
