@@ -38,6 +38,7 @@ namespace AppCenter {
         public AppStream.Category currently_viewed_category;
         public MainWindow main_window { get; construct; }
         public Gtk.Revealer switcher_revealer;
+        public Widgets.Carousel featured_carousel;
 
         public Homepage (MainWindow main_window) {
             Object (main_window: main_window);
@@ -88,7 +89,7 @@ namespace AppCenter {
             featured_label.xalign = 0;
             featured_label.margin_start = LABEL_MARGIN;
 
-            var featured_carousel = new Widgets.Carousel ();
+            featured_carousel = new Widgets.Carousel ();
 
             var featured_grid = new Gtk.Grid ();
             featured_grid.margin = HOMEPAGE_MARGIN;
@@ -123,6 +124,7 @@ namespace AppCenter {
 
             houston.get_app_ids.begin ("/newest/project", (obj, res) => {
                 var featured_ids = houston.get_app_ids.end (res);
+                Utils.shuffle_array (featured_ids);
                 new Thread<void*> ("update-featured-carousel", () => {
                     var packages_for_carousel = new Gee.LinkedList<AppCenterCore.Package> ();
                     foreach (var package in featured_ids) {
