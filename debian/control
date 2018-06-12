@@ -2,8 +2,6 @@ Source: pop-shop
 Section: utils
 Maintainer: Jeremy Soller <jeremy@system76.com>
 Build-Depends: appstream,
-               cmake,
-               cmake-elementary,
                debhelper (>= 9),
                desktop-file-utils,
                intltool,
@@ -17,6 +15,7 @@ Build-Depends: appstream,
                libunity-dev,
                libxml2-dev,
                libxml2-utils,
+               meson,
                valac (>= 0.26)
 Standards-Version: 3.9.6
 Homepage: https://github.com/pop/shop
