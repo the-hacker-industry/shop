@@ -3,11 +3,14 @@
 <component type="desktop-application">
     <id>io.elementary.appcenter.desktop</id>
     <metadata_license>CC0-1.0</metadata_license>
-    <project_group>elementary</project_group>
+    <project_group>pop</project_group>
     <project_license>GPL-3.0+</project_license>
-    <name>AppCenter</name>
+    <name>Pop!_Shop</name>
     <summary>Browse and manage apps</summary>
     <description>
+        <_p>
+            Pop!_Shop
+        </_p>
         <p>
         An app store for indie and open source developers. Browse by categories or
         search and discover new apps. AppCenter is also used for updating your
