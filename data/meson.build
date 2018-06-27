@@ -9,9 +9,9 @@ configure_file(
 # D-Bus Service
 configure_file(
     input: meson.project_name() + '.service.in',
-    output: '@BASENAME@',
+    output: meson.project_name() + '.service',
     configuration: conf_data,
-    install_dir: dbus.get_pkgconfig_variable('session_bus_services_dir')
+    install_dir: join_paths(get_option('datadir'), 'dbus-1', 'services')
 )
 
 # GNOME Shell Search Provider
