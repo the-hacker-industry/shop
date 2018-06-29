@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-12 14:39-0700\n"
+"POT-Creation-Date: 2018-03-23 15:49-0700\n"
 "PO-Revision-Date: 2017-06-12 20:23+0000\n"
 "Last-Translator: Nicolae Crefelean <kneekoo@yahoo.com>\n"
 "Language-Team: Romanian <https://l10n.elementary.io/projects/appcenter/"
@@ -20,19 +20,19 @@ msgstr ""
 msgid "AppCenter"
 msgstr "AppCenter"
 
-#: ../src/Application.vala:115
+#: ../src/Application.vala:124
 msgid "Specified link '%s' could not be found, searching instead"
 msgstr "Legătura '%s' nu este disponibilă. Se inițiază o căutare"
 
-#: ../src/Application.vala:249
+#: ../src/Application.vala:258
 msgid "Application installed"
 msgstr "Aplicație instalată"
 
-#: ../src/Application.vala:250
+#: ../src/Application.vala:259
 msgid "%s has been successfully installed"
 msgstr "%s s-a instalat cu succes"
 
-#: ../src/Application.vala:262
+#: ../src/Application.vala:271
 #, fuzzy
 msgid "There Was An Error Installing %s."
 msgstr "S-a produs o eroare la instalarea %s"
@@ -226,7 +226,7 @@ msgstr[2] ""
 msgid "%s:"
 msgstr ""
 
-#: ../src/Core/Package.vala:192
+#: ../src/Core/Package.vala:186
 msgid "The %s Developers"
 msgstr "Dezvoltatorii %s"
 
@@ -253,7 +253,7 @@ msgstr "Repornește"
 
 #: ../src/Dialogs/RestartDialog.vala:62 ../src/Dialogs/StripeDialog.vala:182
 #: ../src/Dialogs/StripeDialog.vala:299
-#: ../src/Widgets/AppContainers/AbstractAppContainer.vala:147
+#: ../src/Widgets/AppContainers/AbstractAppContainer.vala:145
 msgid "Cancel"
 msgstr "Anulează"
 
@@ -432,57 +432,57 @@ msgstr ""
 "Acesta este un card de test. Vă rugăm folosiți un card real pentru "
 "continuare."
 
-#: ../src/Dialogs/UpdateFailDialog.vala:25
+#: ../src/Dialogs/UpdateFailDialog.vala:24
 msgid "Failed to Fetch Updates"
 msgstr ""
 
-#: ../src/Dialogs/UpdateFailDialog.vala:26
+#: ../src/Dialogs/UpdateFailDialog.vala:25
 msgid ""
 "This may have been caused by external, manually added software repositories "
 "or a corrupted sources file."
 msgstr ""
 
-#: ../src/Dialogs/UpdateFailDialog.vala:46
+#: ../src/Dialogs/UpdateFailDialog.vala:45
 msgid "Details"
 msgstr ""
 
-#: ../src/Dialogs/UpdateFailDialog.vala:54
+#: ../src/Dialogs/UpdateFailDialog.vala:53
 msgid "Ignore"
 msgstr ""
 
-#: ../src/Dialogs/UpdateFailDialog.vala:55
+#: ../src/Dialogs/UpdateFailDialog.vala:54
 msgid "Try Again"
 msgstr ""
 
-#: ../src/MainWindow.vala:147 ../src/Views/Homepage.vala:253
+#: ../src/MainWindow.vala:144 ../src/Views/Homepage.vala:253
 #: ../src/Views/Homepage.vala:262 ../src/Views/Homepage.vala:267
 #: ../src/Views/Homepage.vala:278
 msgid "Home"
 msgstr "Pagina principală"
 
-#: ../src/MainWindow.vala:148 ../src/Views/InstalledView.vala:29
+#: ../src/MainWindow.vala:145 ../src/Views/InstalledView.vala:29
 #: ../src/Views/InstalledView.vala:49
 #, fuzzy
 msgctxt "view"
 msgid "Installed"
 msgstr "Instalează"
 
-#: ../src/MainWindow.vala:175 ../src/MainWindow.vala:321
+#: ../src/MainWindow.vala:172 ../src/MainWindow.vala:313
 #: ../src/Views/SearchView.vala:54 ../src/Views/SearchView.vala:75
 msgid "Search Apps"
 msgstr "Caută aplicații"
 
-#: ../src/MainWindow.vala:193
+#: ../src/MainWindow.vala:190
 msgid "Network Is Not Available"
 msgstr "Lipsă conexiune la internet"
 
-#: ../src/MainWindow.vala:194
+#: ../src/MainWindow.vala:191
 #, fuzzy
 msgid "Connect to the Internet to install or update apps."
 msgstr ""
 "Conectați-vă la Internet pentru instalarea sau actualizarea aplicațiilor."
 
-#: ../src/MainWindow.vala:197
+#: ../src/MainWindow.vala:194
 msgid "Network Settings…"
 msgstr "Setări de rețea…"
 
@@ -506,36 +506,28 @@ msgstr "Raportați o problemă"
 msgid "Help"
 msgstr "Ajutor"
 
-#: ../src/Views/AppInfoView.vala:175
+#: ../src/Views/AppInfoView.vala:170
 msgid "What's New:"
 msgstr ""
 
-#: ../src/Views/AppInfoView.vala:194
+#: ../src/Views/AppInfoView.vala:189
 msgid "Extensions:"
 msgstr "Extensii:"
 
-#: ../src/Views/AppInfoView.vala:287
+#: ../src/Views/AppInfoView.vala:282
 msgid "Other Apps by %s"
 msgstr ""
 
-#: ../src/Views/AppInfoView.vala:321
+#: ../src/Views/AppInfoView.vala:316
 msgid "Link copied to clipboard"
 msgstr ""
 
-#: ../src/Views/AppInfoView.vala:332
+#: ../src/Views/AppInfoView.vala:327
 msgid "Check out %s on AppCenter:"
 msgstr ""
 
-#: ../src/Views/AppInfoView.vala:339
+#: ../src/Views/AppInfoView.vala:334
 msgid "Share"
-msgstr ""
-
-#: ../src/Views/AppInfoView.vala:620
-msgid "Fund"
-msgstr ""
-
-#: ../src/Views/AppInfoView.vala:642
-msgid "Fund the development of this app"
 msgstr ""
 
 #: ../src/Views/AppListUpdateView.vala:59
@@ -585,20 +577,20 @@ msgstr "Niciun rezultat"
 msgid "No apps could be found. Try changing search terms."
 msgstr "Nu s-au găsit aplicații. Încercați alți termeni de căutare."
 
-#: ../src/Widgets/AppContainers/AbstractAppContainer.vala:126
+#: ../src/Widgets/AppContainers/AbstractAppContainer.vala:124
 msgid "Uninstall"
 msgstr "Dezinstalează"
 
-#: ../src/Widgets/AppContainers/AbstractAppContainer.vala:129
+#: ../src/Widgets/AppContainers/AbstractAppContainer.vala:127
 msgid "Open"
 msgstr "Deschide"
 
-#: ../src/Widgets/AppContainers/AbstractAppContainer.vala:211
-#: ../src/Widgets/HumbleButton.vala:93
+#: ../src/Widgets/AppContainers/AbstractAppContainer.vala:208
+#: ../src/Widgets/HumbleButton.vala:82
 msgid "Free"
 msgstr "Gratuit"
 
-#: ../src/Widgets/AppContainers/AbstractAppContainer.vala:235
+#: ../src/Widgets/AppContainers/AbstractAppContainer.vala:232
 msgid "Update"
 msgstr "Actualizează"
 
@@ -663,12 +655,12 @@ msgid "Universal Access"
 msgstr "Accesibilitate"
 
 #. / This amount will be US Dollars. Some languages might need a "$%dUSD"
-#: ../src/Widgets/HumbleButton.vala:127
+#: ../src/Widgets/HumbleButton.vala:141
 msgid "$%d.00"
 msgstr "$%dUSD"
 
 #. / This amount will be US Dollars. Some languages might need a "$%dUSD"
-#: ../src/Widgets/HumbleButton.vala:130
+#: ../src/Widgets/HumbleButton.vala:144
 msgid "$%d"
 msgstr "$%dUSD"
 
