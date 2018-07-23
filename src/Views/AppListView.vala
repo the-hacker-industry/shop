@@ -106,6 +106,8 @@ namespace AppCenter.Views {
 
         [CCode (instance_pos = -1)]
         private void row_update_header (Widgets.AppListRow row, Widgets.AppListRow? before) {
+#if POP_OS
+#else
             bool elementary_native = row.get_package ().is_native;
 
             if (!elementary_native) {
@@ -113,9 +115,11 @@ namespace AppCenter.Views {
                     mark_row_non_curated (row);
                 }
             }
+#endif
         }
 
         private void mark_row_non_curated (Widgets.AppListRow row) {
+            var header = new Gtk.Label (_("Non-Curated Apps"));
             header.margin = 12;
             header.margin_top = 18;
             header.get_style_context ().add_class (Granite.STYLE_CLASS_H4_LABEL);
