@@ -29,6 +29,7 @@ Depends: appstream (>= 0.12),
          apt-config-icons-large,
          apt-config-icons-large-hidpi,
          packagekit,
+         repoman,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: appstream-data-pop
