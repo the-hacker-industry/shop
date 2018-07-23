@@ -55,6 +55,10 @@ config_file = configure_file(
 
 args = []
 if get_option('curated')
+    args += '--define=CURATED'
+endif
+
+if get_option('pop')
     args += '--define=POP_OS'
 endif
 
