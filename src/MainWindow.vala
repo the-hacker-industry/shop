@@ -182,6 +182,7 @@ public class AppCenter.MainWindow : Gtk.ApplicationWindow {
 
         repos_button = new Gtk.Button.from_icon_name ("preferences-system-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
         repos_button.tooltip_text = _("Edit Software Sources…");
+        repos_button.valign = Gtk.Align.CENTER;
         repos_button.clicked.connect (() => {
             try {
                 string[] args = {
