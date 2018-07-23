@@ -343,6 +343,8 @@ namespace AppCenter.Views {
 
             open_button.get_style_context ().add_class (Granite.STYLE_CLASS_H3_LABEL);
 
+#if POP_OS
+#else
             if (package.is_shareable) {
                 var body = _("Check out %s on AppCenter:").printf (package.get_name ());
                 var uri = "https://appcenter.elementary.io/%s".printf (package.component.get_id ());
@@ -373,6 +375,7 @@ namespace AppCenter.Views {
 
                 links_grid.add (share_button);
             }
+#endif
 
             reload_css ();
             set_up_package (128);
