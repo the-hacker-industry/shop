@@ -128,6 +128,11 @@ namespace AppCenter {
                 var featured_ids = houston.get_app_ids.end (res);
                 Utils.shuffle_array (featured_ids);
                 new Thread<void*> ("update-featured-carousel", () => {
+                    Idle.add (() => {
+                        main_window.homepage_loaded ();
+                        return false;
+                    });
+
                     featured_apps = {};
                     foreach (var package in featured_ids) {
                         var candidate = package + ".desktop";
