@@ -19,7 +19,6 @@
 
 public class AppCenter.Widgets.HumbleButton : Gtk.Grid {
     public signal void download_requested ();
-    public signal void license_requested ();
     public signal void payment_requested (int amount);
 
     private HumblePopover selection;

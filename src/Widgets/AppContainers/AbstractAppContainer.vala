@@ -111,7 +111,8 @@ namespace AppCenter {
 
             // action_button.license_requested.connect (() => {
             action_button.download_requested.connect (() => {
-                var license_dialog = new Widgets.LicenseDialog (this.package_name.label, "https://example.com");
+                var license_dialog = new Widgets.LicenseDialog (this.package_name.label, "https://example.com");                
+                license_dialog.show_all ();
                 license_dialog.transient_for = (Gtk.Window) get_toplevel ();
                 
                 license_dialog.download_requested.connect (() => {
