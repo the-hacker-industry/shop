@@ -121,10 +121,6 @@ namespace AppCenter {
                     // i.e. `LicenseRef-proprietary=https://example.com`
                     var split_license = project_license.split_set ("=", 2);
 
-                    var license_type = split_license[0].split_set ("-", 2)[1];
-                    var pretty_license_type = license_type.substring (0, 1).up () + license_type.substring (1);
-
-                    license_copy = _("%s License").printf (pretty_license_type);
                     license_url = split_license[1];
                 }
             }

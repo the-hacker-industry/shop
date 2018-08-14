@@ -55,7 +55,7 @@ public class AppCenter.Widgets.LicenseDialog : Gtk.Dialog {
 
         var license_check = new Gtk.CheckButton ();
 
-        var license_label = new Gtk.Label (_("I've read and accept <a href='%s'>%s the license</a>").printf (license_url, app_name));
+        var license_label = new Gtk.Label (_("I've read and accept <a href='%s'>the %s license</a>").printf (license_url, app_name));
         license_label.max_width_chars = 50;
         license_label.use_markup = true;
         license_label.wrap = true;
