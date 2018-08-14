@@ -114,18 +114,15 @@ namespace AppCenter {
             string? license_copy;
             string? license_url;
 
-            if (project_license != null) {
-                if (project_license.has_prefix ("LicenseRef")) {
-                    license_proprietary = true;
-                    
-                    // i.e. `LicenseRef-proprietary=https://example.com`
-                    var split_license = project_license.split_set ("=", 2);
+            if (project_license != null && project_license.has_prefix ("LicenseRef")) {
+                license_proprietary = true;
+                
+                // i.e. `LicenseRef-proprietary=https://example.com`
+                var split_license = project_license.split_set ("=", 2);
 
-                    license_url = split_license[1];
-                }
+                license_url = split_license[1];
             }
 
-            // action_button.license_requested.connect (() => {
             action_button.download_requested.connect (() => {
                 if (license_proprietary) {
                     var license_dialog = new Widgets.LicenseDialog (this.package_name.label, license_url);                
