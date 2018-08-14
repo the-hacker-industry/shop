@@ -11,6 +11,7 @@ appcenter_files = files(
     'Core/Package.vala',
     'Core/Task.vala',
     'Core/UpdateManager.vala',
+    'Dialogs/LicenseDialog.vala',
     'Dialogs/RestartDialog.vala',
     'Dialogs/StripeDialog.vala',
     'Dialogs/UpdateFailDialog.vala',
