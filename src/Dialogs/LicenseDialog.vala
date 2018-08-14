@@ -53,11 +53,20 @@ public class AppCenter.Widgets.LicenseDialog : Gtk.Dialog {
         secondary_label.wrap = true;
         secondary_label.xalign = 0;
 
+        var license_check = new Gtk.CheckButton ();
+
         var license_label = new Gtk.Label (_("I've read and accept <a href='%s'>%s the license</a>").printf (license_url, app_name));
         license_label.max_width_chars = 50;
         license_label.use_markup = true;
         license_label.wrap = true;
         license_label.xalign = 0;
+
+        var license_grid = new Gtk.Grid ();
+        license_grid.column_spacing = 6;
+        license_grid.margin_top = 12;
+
+        license_grid.attach (license_check, 0, 0);
+        license_grid.attach (license_label, 1, 0);
 
         var grid = new Gtk.Grid ();
         grid.column_spacing = 12;
@@ -66,19 +75,27 @@ public class AppCenter.Widgets.LicenseDialog : Gtk.Dialog {
         grid.attach (image,           0, 0, 1, 2);
         grid.attach (primary_label,   1, 0);
         grid.attach (secondary_label, 1, 1);
-        grid.attach (license_label,   1, 2);
+        grid.attach (license_grid,   1, 2);
         grid.show_all ();
 
         get_content_area ().add (grid);
 
-        var install_button = (Gtk.Button) add_button (_("Install"), Gtk.ResponseType.OK);
         var cancel_button = (Gtk.Button) add_button (_("Cancel"), Gtk.ResponseType.CANCEL);
+
+        var install_button = (Gtk.Button) add_button (_("Install"), Gtk.ResponseType.OK);
+        install_button.sensitive = false;
+        install_button.get_style_context ().add_class (Gtk.STYLE_CLASS_SUGGESTED_ACTION);
 
         var action_area = get_action_area ();
         action_area.margin = 6;
         action_area.margin_top = 12;
 
-        install_button.clicked.connect (() => download_requested ());
+        license_check.bind_property ("active", install_button, "sensitive");
+
+        install_button.clicked.connect (() => {
+            download_requested ();
+            destroy ();
+        });
         cancel_button.clicked.connect (() => destroy ());
     }
 }

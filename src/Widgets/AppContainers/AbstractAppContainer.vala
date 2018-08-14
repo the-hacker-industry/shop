@@ -108,19 +108,41 @@ namespace AppCenter {
             image = new Gtk.Image ();
 
             action_button = new Widgets.HumbleButton ();
+            
+            var project_license = package.component.project_license;
+            bool license_proprietary = false;
+            string? license_copy;
+            string? license_url;
+
+            if (project_license != null) {
+                if (project_license.has_prefix ("LicenseRef")) {
+                    license_proprietary = true;
+                    
+                    // i.e. `LicenseRef-proprietary=https://example.com`
+                    var split_license = project_license.split_set ("=", 2);
+
+                    var license_type = split_license[0].split_set ("-", 2)[1];
+                    var pretty_license_type = license_type.substring (0, 1).up () + license_type.substring (1);
+
+                    license_copy = _("%s License").printf (pretty_license_type);
+                    license_url = split_license[1];
+                }
+            }
 
             // action_button.license_requested.connect (() => {
             action_button.download_requested.connect (() => {
-                var license_dialog = new Widgets.LicenseDialog (this.package_name.label, "https://example.com");                
-                license_dialog.show_all ();
-                license_dialog.transient_for = (Gtk.Window) get_toplevel ();
-                
-                license_dialog.download_requested.connect (() => {
+                if (license_proprietary) {
+                    var license_dialog = new Widgets.LicenseDialog (this.package_name.label, license_url);                
+                    license_dialog.show_all ();
+                    license_dialog.transient_for = (Gtk.Window) get_toplevel ();
+                    
+                    license_dialog.download_requested.connect (() => {
+                        action_clicked.begin ();
+                    });
+                } else {
                     action_clicked.begin ();
-                });
+                }
             });
-
-            // action_button.download_requested.connect (() => action_clicked.begin ());
 
             action_button.payment_requested.connect ((amount) => {
                 var stripe = new Widgets.StripeDialog (amount, this.package_name.label, this.package.component.get_desktop_id ().replace (".desktop", ""), this.package.get_payments_key());
