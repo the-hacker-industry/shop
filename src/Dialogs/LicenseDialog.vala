@@ -47,7 +47,7 @@ public class AppCenter.Widgets.LicenseDialog : Gtk.Dialog {
         primary_label.xalign = 0;
         primary_label.get_style_context ().add_class ("primary");
 
-        var secondary_label = new Gtk.Label (_("You must read and accept this license to install and use %s. If you do not agree, %s will not be installed.").printf (app_name, app_name));
+        var secondary_label = new Gtk.Label (_("You must read and accept this license to install and use %s. If you do not accept, %s will not be installed.").printf (app_name, app_name));
         secondary_label.max_width_chars = 50;
         secondary_label.selectable = true;
         secondary_label.wrap = true;
@@ -75,7 +75,7 @@ public class AppCenter.Widgets.LicenseDialog : Gtk.Dialog {
         grid.attach (image,           0, 0, 1, 2);
         grid.attach (primary_label,   1, 0);
         grid.attach (secondary_label, 1, 1);
-        grid.attach (license_grid,   1, 2);
+        grid.attach (license_grid,    1, 2);
         grid.show_all ();
 
         get_content_area ().add (grid);
