@@ -119,12 +119,13 @@ namespace AppCenter {
                 
                 // i.e. `LicenseRef-proprietary=https://example.com`
                 var split_license = project_license.split_set ("=", 2);
-
-                license_url = split_license[1];
+                if (split_license.length == 2) {
+                    license_url = split_license[1];
+                }
             }
 
             action_button.download_requested.connect (() => {
-                if (license_proprietary) {
+                if (license_proprietary && license_url != null) {
                     var license_dialog = new Widgets.LicenseDialog (this.package_name.label, license_url);                
                     license_dialog.show_all ();
                     license_dialog.transient_for = (Gtk.Window) get_toplevel ();
