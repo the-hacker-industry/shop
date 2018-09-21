@@ -549,6 +549,8 @@ namespace AppCenter.Views {
                     });
                 }
 
+                cache.maintain ();
+
                 // TODO: dynamically load screenshots as they become available.
                 while (urls.length () != completed) {
                     Thread.usleep (100000);
