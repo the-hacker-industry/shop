@@ -56,5 +56,12 @@ public abstract class AppCenter.View : Gtk.Stack {
         });
     }
 
+    public void remove_visible_package () {
+        unowned Gtk.Widget? child = get_visible_child ();
+        if (null != child && child is Views.AppInfoView) {
+            child.destroy ();
+        }
+    }
+
     public abstract void return_clicked ();
 }
