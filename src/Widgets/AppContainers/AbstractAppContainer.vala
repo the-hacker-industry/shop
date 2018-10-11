@@ -133,7 +133,7 @@ namespace AppCenter {
             }
 
             action_button.download_requested.connect (() => {
-                if (license_proprietary) {
+                if (license_proprietary && license_url != null) {
                     var license_dialog = new Widgets.LicenseDialog (this.package_name.label, license_url);                
                     license_dialog.show_all ();
                     license_dialog.transient_for = (Gtk.Window) get_toplevel ();

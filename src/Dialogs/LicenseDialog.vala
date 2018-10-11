@@ -22,9 +22,9 @@ public class AppCenter.Widgets.LicenseDialog : Gtk.Dialog {
     public signal void download_requested ();
 
     public string app_name { get; construct; }
-    public string? license_url { get; construct; }
+    public string license_url { get; construct; }
 
-    public LicenseDialog (string _app_name, string? _license_url) {
+    public LicenseDialog (string _app_name, string _license_url) {
         Object (
             app_name: _app_name,
             title: "License",
@@ -55,11 +55,7 @@ public class AppCenter.Widgets.LicenseDialog : Gtk.Dialog {
 
         var license_check = new Gtk.CheckButton ();
 
-        var license_str = license_url == null
-            ? _("I've read and accept the license")
-            : _("I've read and accept <a href='%s'>the %s license</a>").printf (license_url, app_name);
-
-        var license_label = new Gtk.Label (license_str);
+        var license_label = new Gtk.Label (_("I've read and accept <a href='%s'>the %s license</a>").printf (license_url, app_name));
         license_label.max_width_chars = 50;
         license_label.use_markup = true;
         license_label.wrap = true;
