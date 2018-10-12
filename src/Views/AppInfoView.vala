@@ -45,7 +45,7 @@ namespace AppCenter.Views {
         construct {
             image.margin_top = 12;
             image.margin_start = 6;
-            image.pixel_size = 128;
+            inner_image.pixel_size = 128;
 
             action_button.suggested_action = true;
 
@@ -380,12 +380,16 @@ namespace AppCenter.Views {
 #endif
             reload_css ();
             set_up_package (128);
-            parse_description (package.get_description ());
+            package.get_description.begin ((obj, res) => {
+                parse_description (package.get_description.end (res));
+            });
 
             if (package.is_os_updates) {
                 package.notify["state"].connect (() => {
                     Idle.add (() => {
-                        parse_description (package.get_description ());
+                        package.get_description.begin ((obj, res) => {
+                            parse_description (package.get_description.end (res));
+                        });
                         return false;
                     });
                 });
@@ -669,7 +673,7 @@ namespace AppCenter.Views {
                 selection.payment_requested.connect ((amount) => {
                     var stripe = new Widgets.StripeDialog (amount,
                                                            package.get_name (),
-                                                           package.component.get_desktop_id ().replace (".desktop", ""),
+                                                           package.component.id.replace (".desktop", ""),
                                                            package.get_payments_key ()
                                                           );
 

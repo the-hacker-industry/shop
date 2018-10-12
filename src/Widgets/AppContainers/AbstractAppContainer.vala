@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2016-2017 elementary LLC (https://elementary.io)
+* Copyright (c) 2016–2018 elementary, Inc. (https://elementary.io)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -33,11 +33,13 @@ namespace AppCenter {
         protected bool show_uninstall { get; set; default = true; }
         protected bool show_open { get; set; default = true; }
 
-        protected Gtk.Image image;
+        protected Gtk.Overlay image;
+        protected Gtk.Image inner_image;
         protected Gtk.Label package_name;
         protected Gtk.Label package_author;
         protected Gtk.Label package_summary;
 
+        protected Widgets.ContentWarningDialog content_warning;
         protected Widgets.HumbleButton action_button;
         protected Gtk.Button uninstall_button;
         protected Gtk.Button open_button;
@@ -107,28 +109,44 @@ namespace AppCenter {
         protected bool updates_view = false;
 
         construct {
-            image = new Gtk.Image ();
+            image = new Gtk.Overlay ();
+            inner_image = new Gtk.Image ();
+            image.add (inner_image);
 
             settings = Settings.get_default ();
 
             package_author = new Gtk.Label ("");
             package_name = new Gtk.Label ("");
-            image = new Gtk.Image ();
 
             action_button = new Widgets.HumbleButton ();
-            action_button.download_requested.connect (() => action_clicked.begin ());
+            action_button.download_requested.connect (() => {
+                if (settings.content_warning == true && package.is_explicit) {
+                    content_warning = new Widgets.ContentWarningDialog (this.package_name.label);
+                    content_warning.transient_for = (Gtk.Window) get_toplevel ();
+
+                    content_warning.download_requested.connect (() => {
+                        action_clicked.begin ();
+                    });
+
+                    content_warning.show ();
+                } else {
+                    action_clicked.begin ();
+                }
+            });
 
             action_button.payment_requested.connect ((amount) => {
-                var stripe = new Widgets.StripeDialog (amount, this.package_name.label, this.package.component.get_desktop_id ().replace (".desktop", ""), this.package.get_payments_key());
-                stripe.transient_for = (Gtk.Window) get_toplevel ();
+                if (settings.content_warning == true && package.is_explicit) {
+                    content_warning = new Widgets.ContentWarningDialog (this.package_name.label);
+                    content_warning.transient_for = (Gtk.Window) get_toplevel ();
 
-                stripe.download_requested.connect (() => {
-                    action_clicked.begin ();
+                    content_warning.download_requested.connect (() => {
+                        show_stripe_dialog (amount);
+                    });
 
-                    settings.add_paid_app (package.component.get_id ());
-                });
-
-                stripe.show ();
+                    content_warning.show ();
+                } else {
+                    show_stripe_dialog (amount);
+                }
             });
 
             uninstall_button = new Gtk.Button.with_label (_("Uninstall"));
@@ -176,6 +194,25 @@ namespace AppCenter {
             action_stack.show_all ();
         }
 
+        private void show_stripe_dialog (int amount) {
+            var stripe = new Widgets.StripeDialog (
+                amount,
+                package_name.label,
+                package.component.id.replace (".desktop", ""),
+                package.get_payments_key ()
+            );
+
+            stripe.transient_for = (Gtk.Window) get_toplevel ();
+
+            stripe.download_requested.connect (() => {
+                action_clicked.begin ();
+
+                settings.add_paid_app (package.component.get_id ());
+            });
+
+            stripe.show ();
+        }
+
         protected virtual void set_up_package (uint icon_size = 48) {
             package_name.label = package.get_name ();
 
@@ -183,7 +220,23 @@ namespace AppCenter {
                 package_author.label = package.author_title;
             }
 
-            image.gicon = package.get_icon (icon_size, image.get_scale_factor ());
+            var scale_factor = inner_image.get_scale_factor ();
+
+            var plugin_host_package = package.get_plugin_host_package ();
+            if (package.is_plugin && plugin_host_package != null) {
+                inner_image.gicon = package.get_icon (icon_size, scale_factor);
+                var overlay_gicon = plugin_host_package.get_icon (icon_size / 2, scale_factor);
+                var badge_icon_size = Gtk.IconSize.LARGE_TOOLBAR;
+                if (icon_size >= 128) {
+                    badge_icon_size = Gtk.IconSize.DIALOG;
+                }
+
+                var overlay_image = new Gtk.Image.from_gicon (overlay_gicon, badge_icon_size);
+                overlay_image.halign = overlay_image.valign = Gtk.Align.END;
+                image.add_overlay (overlay_image);
+            } else {
+                inner_image.gicon = package.get_icon (icon_size, scale_factor);
+            }
 
             package.notify["state"].connect (() => {
                 Idle.add (() => {
@@ -212,7 +265,9 @@ namespace AppCenter {
                 action_button.amount = int.parse (this.package.get_suggested_amount ());
             }
 
-            action_stack.set_visible_child_name ("buttons");
+            if (action_stack.get_child_by_name ("buttons") != null) {
+                action_stack.visible_child_name = "buttons";
+            }
 
             switch (package.state) {
                 case AppCenterCore.Package.State.NOT_INSTALLED:
@@ -278,6 +333,8 @@ namespace AppCenter {
         }
 
         private void action_cancelled () {
+            action_cancellable.cancel ();
+            update_action ();
             package.action_cancellable.cancel ();
         }
 
