@@ -119,16 +119,41 @@ namespace AppCenter {
             package_name = new Gtk.Label ("");
 
             action_button = new Widgets.HumbleButton ();
-            action_button.download_requested.connect (() => {
-                if (settings.content_warning == true && package.is_explicit) {
-                    content_warning = new Widgets.ContentWarningDialog (this.package_name.label);
-                    content_warning.transient_for = (Gtk.Window) get_toplevel ();
+            
+            var project_license = package.component.project_license;
+            bool license_proprietary = false;
+            string? license_copy;
+            string? license_url;
 
-                    content_warning.download_requested.connect (() => {
+            if (project_license != null && project_license.has_prefix ("LicenseRef")) {
+                license_proprietary = true;
+                
+                // i.e. `LicenseRef-proprietary=https://example.com`
+                var split_license = project_license.split_set ("=", 2);
+                if (split_license.length == 2) {
+                    license_url = split_license[1];
+                }
+            }
+
+            action_button.download_requested.connect (() => {
+                // TODO: integrate this alongside the proprietary check.
+                //  if (settings.content_warning == true && package.is_explicit) {
+                //      content_warning = new Widgets.ContentWarningDialog (this.package_name.label);
+                //      content_warning.transient_for = (Gtk.Window) get_toplevel ();
+                //      content_warning.download_requested.connect (() => {
+                //          action_clicked.begin ();
+                //      });
+                //      content_warning.show ();
+                //  }
+
+                if (license_proprietary && license_url != null) {
+                    var license_dialog = new Widgets.LicenseDialog (this.package_name.label, license_url);                
+                    license_dialog.show_all ();
+                    license_dialog.transient_for = (Gtk.Window) get_toplevel ();
+                    
+                    license_dialog.download_requested.connect (() => {
                         action_clicked.begin ();
                     });
-
-                    content_warning.show ();
                 } else {
                     action_clicked.begin ();
                 }
