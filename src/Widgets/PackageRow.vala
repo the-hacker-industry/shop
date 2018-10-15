@@ -28,6 +28,8 @@ namespace AppCenter.Widgets {
             grid.changed.connect (() => {
                 changed ();
             });
+
+            selectable = false;
         }
 
         public PackageRow.list (AppCenterCore.Package package, Gtk.SizeGroup? info_size_group, Gtk.SizeGroup? action_size_group, bool show_uninstall = true) {
@@ -36,6 +38,8 @@ namespace AppCenter.Widgets {
             grid.changed.connect (() => {
                 changed ();
             });
+
+            selectable = false;
         }
 
         public bool get_update_available () {
