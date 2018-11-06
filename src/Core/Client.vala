@@ -111,6 +111,11 @@ public class AppCenterCore.Client : Object {
 
         var control = new Pk.Control ();
         control.updates_changed.connect (updates_changed_callback);
+
+        GLib.Timeout.add_seconds (SECONDS_BETWEEN_REFRESHES, () => {
+            update_cache.begin (true);
+            return true;
+        });
     }
 
     private void updates_changed_callback () {
@@ -459,11 +464,10 @@ public class AppCenterCore.Client : Object {
         try {
             Pk.Results results = yield UpdateManager.get_default ().get_updates (null);
 
-            bool was_empty = updates_number == 0U;
             updates_number = get_real_packages_length (results.get_package_array ());
 
             var application = Application.get_default ();
-            if (was_empty && updates_number != 0U) {
+            if (updates_number != 0U) {
                 string title = ngettext ("Update Available", "Updates Available", updates_number);
                 string body = ngettext ("%u update is available for your system", "%u updates are available for your system", updates_number).printf (updates_number);
 
@@ -606,7 +610,8 @@ public class AppCenterCore.Client : Object {
 
         /* One cache update a day, keeps the doctor away! */
         if (force || last_cache_update == null ||
-            (new DateTime.now_local ()).difference (last_cache_update) / GLib.TimeSpan.SECOND >= SECONDS_BETWEEN_REFRESHES) {
+            (new DateTime.now_local ()).difference (last_cache_update) / GLib.TimeSpan.SECOND >= SECONDS_BETWEEN_REFRESHES)
+        {
             var nm = NetworkMonitor.get_default ();
             if (nm.get_network_available ()) {
                 debug ("New refresh task");
