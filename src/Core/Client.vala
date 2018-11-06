@@ -40,7 +40,7 @@ public class AppCenterCore.Client : Object {
 
     public bool updating_cache { public get; private set; default = false; }
 
-    public AppCenterCore.ScreenshotCache screenshot_cache { get; construct; }
+    public AppCenterCore.ScreenshotCache? screenshot_cache { get; construct; }
     public AppCenterCore.Package os_updates { public get; private set; }
     public Gee.TreeSet<AppCenterCore.Package> driver_list { get; construct; }
 
@@ -61,7 +61,7 @@ public class AppCenterCore.Client : Object {
     private SuspendControl sc;
 
     private Client () {
-        Object (screenshot_cache: new AppCenterCore.ScreenshotCache ());
+        Object (screenshot_cache: AppCenterCore.ScreenshotCache.new_cache ());
     }
 
     static construct {
@@ -81,7 +81,9 @@ public class AppCenterCore.Client : Object {
 
         try {
             appstream_pool.load ();
-
+        } catch (Error e) {
+            critical (e.message);
+        } finally {
             var comp_validator = ComponentValidator.get_default ();
             appstream_pool.get_components ().foreach ((comp) => {
                 if (!comp_validator.validate (comp)) {
@@ -93,8 +95,6 @@ public class AppCenterCore.Client : Object {
                     package_list[pkg_name] = package;
                 }
             });
-        } catch (Error e) {
-            critical (e.message);
         }
 
         var icon = new AppStream.Icon ();
@@ -731,6 +731,8 @@ public class AppCenterCore.Client : Object {
         foreach (var package in package_list.values) {
             if (package.component.id == id) {
                 return package;
+            } else if (package.component.id == id + ".desktop") {
+                return package;
             }
         }
 
@@ -739,7 +741,7 @@ public class AppCenterCore.Client : Object {
 
     public AppCenterCore.Package? get_package_for_desktop_id (string desktop_id) {
         foreach (var package in package_list.values) {
-            if (package.component.get_desktop_id () == desktop_id) {
+            if (package.component.id == desktop_id) {
                 return package;
             }
         }

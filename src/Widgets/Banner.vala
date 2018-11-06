@@ -1,6 +1,6 @@
 // -*- Mode: vala; indent-tabs-mode: nil; tab-width: 4 -*-
 /*-
- * Copyright (c) 2016 elementary LLC. (https://elementary.io)
+ * Copyright (c) 2016–2018 elementary, Inc. (https://elementary.io)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ namespace AppCenter.Widgets {
 
                 string description;
                 if (has_package) {
-                    description = package.get_description ();
+                    description = package.get_description_sync ();
                     int close_paragraph_index = description.index_of ("</p>", 0);
                     description = description.slice (3, close_paragraph_index);
                 } else {
@@ -134,6 +134,12 @@ namespace AppCenter.Widgets {
             add (stack);
 
             set_default_brand ();
+            destroy.connect (() => {
+               if (timer_id > 0) {
+                   Source.remove (timer_id);
+                   timer_id = 0;
+               }
+            });
         }
 
         public Banner (Switcher switcher) {
@@ -166,6 +172,11 @@ namespace AppCenter.Widgets {
         }
 
         public void add_package (AppCenterCore.Package? package) {
+            if (package.is_explicit) {
+                debug ("%s is explicit, not adding to banner", package.component.id);
+                return;
+            }
+
             var widget = new BannerWidget (package);
             stack.add_named (widget, next_free_package_index.to_string ());
             next_free_package_index++;

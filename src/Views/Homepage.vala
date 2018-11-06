@@ -33,6 +33,8 @@ namespace AppCenter {
         private Gtk.ScrolledWindow category_scrolled;
         private string current_category;
 
+        public signal void page_loaded ();
+
         public bool viewing_package { get; private set; default = false; }
 
         public AppStream.Category currently_viewed_category;
@@ -42,8 +44,8 @@ namespace AppCenter {
         public Widgets.Carousel featured_carousel;
         private AppCenterCore.Package[] featured_apps;
 
-        public Homepage (MainWindow main_window) {
-            Object (main_window: main_window);
+        public Homepage () {
+            
         }
 
         construct {
