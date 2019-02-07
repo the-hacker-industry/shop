@@ -44,14 +44,14 @@ namespace AppCenter {
         public Widgets.Carousel featured_carousel;
         private AppCenterCore.Package[] featured_apps;
 
-        public Homepage () {
-            
-        }
+        private Widgets.Switcher switcher;
+        private Widgets.Carousel recently_updated_carousel;
+        private Widgets.Carousel trending_carousel;
+        private Gtk.Revealer recently_updated_revealer;
+        private Gtk.Revealer trending_revealer;
 
         construct {
-            var houston = AppCenterCore.Houston.get_default ();
-
-            var switcher = new Widgets.Switcher ();
+            switcher = new Widgets.Switcher ();
             switcher.halign = Gtk.Align.CENTER;
 
             switcher_revealer = new Gtk.Revealer ();
@@ -125,6 +125,55 @@ namespace AppCenter {
             category_scrolled.add (grid);
 
             add (category_scrolled);
+
+            refresh_banners ();
+
+            category_flow.child_activated.connect ((child) => {
+                var item = child as Widgets.CategoryItem;
+                if (item != null) {
+                    currently_viewed_category = item.app_category;
+                    show_app_list_for_category (item.app_category);
+                }
+            });
+
+            AppCenterCore.Client.get_default ().pool_updated.connect (() => {
+                // Clear the cached categories when the AppStream pool is updated
+                foreach (weak Gtk.Widget child in category_flow.get_children ()) {
+                    if (child is Widgets.CategoryItem) {
+                        var item = child as Widgets.CategoryItem;
+                        var category_components = item.app_category.get_components ();
+                        category_components.remove_range (0, category_components.length);
+                    }
+                }
+
+                // Remove any old cached category list views
+                foreach (weak Gtk.Widget child in get_children ()) {
+                    if (child is Views.AppListView) {
+                        if (child != visible_child) {
+                            child.destroy ();
+                        } else {
+                            // If the category list view is visible, don't delete it, just make the package list right
+                            var list_view = child as Views.AppListView;
+                            list_view.clear ();
+
+                            unowned Client client = Client.get_default ();
+                            var apps = client.get_applications_for_category (currently_viewed_category);
+                            list_view.add_packages (apps);
+                        }
+                    }
+                }
+
+                // If the banners weren't populated, try again to populate them
+                if (!featured_revealer.reveal_child) {
+                    refresh_banners ();
+                }
+            });
+
+            featured_carousel.package_activated.connect (show_package);
+        }
+
+        private void refresh_banners () {
+            var houston = AppCenterCore.Houston.get_default ();
 
             houston.get_app_ids.begin ("/newest/project", (obj, res) => {
                 var featured_ids = houston.get_app_ids.end (res);

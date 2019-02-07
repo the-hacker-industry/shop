@@ -1,3 +1,9 @@
+pop-shop (3.0.1) bionic; urgency=medium
+
+  * New upstream release
+
+ -- Michael Aaron Murphy <michael@system76.com>  Mon, 26 Nov 2018 10:10:20 -0700
+
 pop-shop (0.2.9) bionic; urgency=medium
 
   * New upstream release
