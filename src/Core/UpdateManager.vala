@@ -105,7 +105,7 @@ public class AppCenterCore.UpdateManager : Object {
         return instance.once (() => { return new UpdateManager (); });
     }
 
-    private bool release_upgrade_in_progress () {
+    public bool release_upgrade_in_progress () {
         return upgrade_file.query_exists () || preparing_upgrade_file.query_exists ();
     }
 }

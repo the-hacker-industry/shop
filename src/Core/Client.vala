@@ -514,12 +514,13 @@ public class AppCenterCore.Client : Object {
         task_count++;
 
         try {
-            Pk.Results results = yield UpdateManager.get_default ().get_updates (null);
+            var update_manager = UpdateManager.get_default ();
+            Pk.Results results = yield update_manager.get_updates (null);
 
             updates_number = get_real_packages_length (results.get_package_array ());
 
             var application = Application.get_default ();
-            if (updates_number != 0U) {
+            if (updates_number != 0U && !update_manager.release_upgrade_in_progress ()) {
                 string title = ngettext ("Update Available", "Updates Available", updates_number);
                 string body = ngettext ("%u update is available for your system", "%u updates are available for your system", updates_number).printf (updates_number);
 
