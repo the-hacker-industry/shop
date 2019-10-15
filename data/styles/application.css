@@ -138,8 +138,14 @@
     opacity: 0.33;
 }
 
-.banner progressbar {
+.banner progressbar,
+.banner progressbar text {
     color: @banner_fg_color;
+}
+
+.banner progressbar text {
+    padding: 3px;
+    background-color: transparent;
 }
 
 .switcher {
