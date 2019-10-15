@@ -143,6 +143,11 @@
     color: @banner_fg_color;
 }
 
+.banner progressbar text {
+    padding: 3px;
+    background-color: transparent;
+}
+
 .switcher {
     background-color: transparent;
     border: none;
